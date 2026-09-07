@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, Heart, Globe, ShieldCheck, Home, MapPinned, FileText, FolderOpen, User, LogOut, Bell, Settings } from 'lucide-react';
 
 const navItems = [
@@ -25,6 +25,13 @@ type NavbarProps = {
 function Navbar({ user, onLogout, language = 'en', setLanguage, role = 'citizen', setRole, notifications = [] }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const isArabic = language === 'ar';
+  const navigate = useNavigate();
+
+  const goToSection = (section: string) => {
+    navigate('/');
+    window.setTimeout(() => document.getElementById(section)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    setIsOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-40 border-b border-blue-700/60 bg-[#0c5cd9] shadow-[0_10px_30px_rgba(14,84,191,0.18)] backdrop-blur-sm">
@@ -38,14 +45,12 @@ function Navbar({ user, onLogout, language = 'en', setLanguage, role = 'citizen'
           </Link>
 
           <div className="hidden items-center gap-4 lg:flex xl:gap-6">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `text-xs font-semibold transition xl:text-sm ${isActive ? 'text-white' : 'text-blue-100 hover:text-white'}`
-                }
-              >
+            {navItems.map((item) => item.to.includes('#') ? (
+              <button key={item.to} type="button" onClick={() => goToSection(item.to.split('#')[1])} className="text-xs font-semibold text-blue-100 transition hover:text-white xl:text-sm">
+                {item.label}
+              </button>
+            ) : (
+              <NavLink key={item.to} to={item.to} className={({ isActive }) => `text-xs font-semibold transition xl:text-sm ${isActive ? 'text-white' : 'text-blue-100 hover:text-white'}`}>
                 {item.label}
               </NavLink>
             ))}
@@ -60,19 +65,19 @@ function Navbar({ user, onLogout, language = 'en', setLanguage, role = 'citizen'
               <Globe size={15} />
               {isArabic ? 'English | العربية' : 'العربية | English'}
             </button>
-            <button type="button" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15 xl:px-3 xl:py-2 xl:text-sm">
+            <Link to={user ? '/dashboard' : '/login'} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white/15 xl:px-3 xl:py-2 xl:text-sm">
               <Bell size={15} />
               {notifications.filter((n) => !n.read).length}
-            </button>
+            </Link>
             {user ? (
               <button type="button" onClick={onLogout} className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-bold text-blue-700 shadow-sm transition hover:bg-blue-50 xl:px-4 xl:text-sm">
                 <LogOut size={15} />
                 Logout
               </button>
             ) : (
-              <a href="#try-havenaid" className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-bold text-blue-700 shadow-sm transition hover:bg-blue-50 xl:px-4 xl:text-sm">
+              <button type="button" onClick={() => goToSection('try-havenaid')} className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-xs font-bold text-blue-700 shadow-sm transition hover:bg-blue-50 xl:px-4 xl:text-sm">
                 Try HavenAid
-              </a>
+              </button>
             )}
           </div>
 
@@ -95,23 +100,20 @@ function Navbar({ user, onLogout, language = 'en', setLanguage, role = 'citizen'
       {isOpen && (
         <div className="border-t border-blue-700/60 bg-[#0c5cd9] lg:hidden">
           <div className="mx-auto max-w-7xl space-y-1 px-4 py-3">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  `block rounded-xl px-3 py-2 text-base font-semibold ${isActive ? 'bg-white/10 text-white' : 'text-blue-100 hover:bg-white/5 hover:text-white'}`
-                }
-              >
+            {navItems.map((item) => item.to.includes('#') ? (
+              <button key={item.to} type="button" onClick={() => goToSection(item.to.split('#')[1])} className="block w-full rounded-xl px-3 py-2 text-left text-base font-semibold text-blue-100 hover:bg-white/5 hover:text-white">
+                {item.label}
+              </button>
+            ) : (
+              <NavLink key={item.to} to={item.to} onClick={() => setIsOpen(false)} className={({ isActive }) => `block rounded-xl px-3 py-2 text-base font-semibold ${isActive ? 'bg-white/10 text-white' : 'text-blue-100 hover:bg-white/5 hover:text-white'}`}>
                 {item.label}
               </NavLink>
             ))}
             <div className="mt-3 flex items-center gap-3 border-t border-white/15 pt-3">
-              <a href="#try-havenaid" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white">
+              <button type="button" onClick={() => goToSection('try-havenaid')} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white">
                 <ShieldCheck size={15} />
                 Try HavenAid
-              </a>
+              </button>
               <Link to="/settings" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white">
                 <Settings size={15} />
                 Settings

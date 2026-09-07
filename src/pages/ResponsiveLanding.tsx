@@ -207,9 +207,24 @@ function ResponsiveLanding({ language = 'en' }: { language?: 'en' | 'ar' }) {
             <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-slate-600">
               <span className="inline-flex items-center gap-2"><CheckCircle2 className="text-emerald-600" size={16} /> {t.flowLabel}</span>
             </div>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              {[
+                { label: isArabic ? 'بلاغات مستجيبة' : 'Reports triaged', value: '12.4k' },
+                { label: isArabic ? 'موارد مخصصة' : 'Resources mapped', value: '94%' },
+                { label: isArabic ? 'استجابة أسرع' : 'Faster response', value: '< 2h' },
+              ].map((item) => (
+                <div key={item.label} className="rounded-2xl border border-slate-200 bg-white/80 p-3 shadow-sm backdrop-blur-sm">
+                  <div className="text-xl font-black text-slate-900">{item.value}</div>
+                  <div className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">{item.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="relative">
+            <div className="absolute -left-4 top-10 h-24 w-24 rounded-full bg-blue-200/60 blur-3xl" />
+            <div className="absolute -right-6 bottom-8 h-28 w-28 rounded-full bg-cyan-200/70 blur-3xl" />
             <div className="relative overflow-hidden rounded-[30px] border border-slate-200 bg-slate-900 p-3 shadow-[0_28px_80px_rgba(15,23,42,0.18)]">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(59,130,246,0.2),transparent_48%)]" />
               <div className="relative rounded-[24px] border border-slate-700 bg-slate-800/80 p-4">
@@ -295,13 +310,13 @@ function ResponsiveLanding({ language = 'en' }: { language?: 'en' | 'ar' }) {
                 {stage === 'question' && (
                   <>
                     <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Step 1</p>
-                    <h3 className="mt-3 text-2xl font-black text-slate-900">{isArabic ? 'هل اكتشفت في مجتمعك فيضانًا شديدًا؟' : 'Imagine you discover severe flooding in your community.'}</h3>
-                    <p className="mt-3 text-slate-600">{isArabic ? 'ما الذي ستفعله أولاً؟' : 'What would you do first?'}</p>
+                    <h3 className="mt-3 text-2xl font-black text-slate-900">{isArabic ? 'هل اكتشفت في مجتمعك فيضانًا شديدًا؟' : 'Imagine you discover a serious humanitarian issue in your community.'}</h3>
+                    <p className="mt-3 text-slate-600">{isArabic ? 'ما الذي ستفعله أولاً؟' : 'What would you do first as a resident or local volunteer?'}</p>
                     <div className="mt-5 space-y-3">
                       {[
-                        { value: 'report', label: isArabic ? 'الإبلاغ عن المشكلة' : 'Report the problem' },
-                        { value: 'resource', label: isArabic ? 'البحث عن الموارد' : 'Look for resources' },
-                        { value: 'ignore', label: isArabic ? 'تجاهل الأمر' : 'Ignore it' },
+                        { value: 'report', label: isArabic ? 'الإبلاغ عن المشكلة' : 'Report the problem to the response network' },
+                        { value: 'resource', label: isArabic ? 'البحث عن الموارد' : 'Look for available aid and support' },
+                        { value: 'ignore', label: isArabic ? 'تجاهل الأمر' : 'Wait and see' },
                       ].map((option) => (
                         <button
                           key={option.value}
@@ -321,7 +336,7 @@ function ResponsiveLanding({ language = 'en' }: { language?: 'en' | 'ar' }) {
                         onClick={continueFromQuestion}
                         className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                       >
-                        {isArabic ? 'متابعة' : 'Continue'}
+                        {isArabic ? 'متابعة إلى التحليل' : 'Continue to analysis'}
                       </button>
                     </div>
                   </>
@@ -345,11 +360,11 @@ function ResponsiveLanding({ language = 'en' }: { language?: 'en' | 'ar' }) {
                       <p><strong>{isArabic ? 'الاحتياجات المحتملة' : 'Potential Needs'}:</strong> {chosenScenario.needs.join(', ')}</p>
                     </div>
                     <p className="mt-4 text-sm leading-7 text-slate-600">
-                      {isArabic ? 'يساعد الذكاء الاصطناعي على تنظيم المعلومات بحيث يمكن للجهات المستجيبة فهم ما قد يحتاجه الناس بشكل أسرع.' : 'AI helps organize the information so responders can understand what may be needed faster.'}
+                      {isArabic ? 'يساعد الذكاء الاصطناعي على تنظيم المعلومات بحيث يمكن للجهات المستجيبة وفريق الحماية الاجتماعي فهم ما يحتاجه الناس بشكل أسرع وأكثر دقة.' : 'AI helps organize the information so responders, aid teams, and local authorities can understand the urgency and next actions more quickly.'}
                     </p>
                     <div className="mt-6 flex justify-end">
                       <button type="button" onClick={runAiAnalysis} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">
-                        {aiStep === 4 ? (isArabic ? 'عرض الاستجابة الموصى بها' : 'See Recommended Response') : (isArabic ? 'التالي' : 'Next')}
+                        {aiStep === 4 ? (isArabic ? 'عرض الاستجابة الموصى بها' : 'See recommended response') : (isArabic ? 'التالي' : 'Next step')}
                       </button>
                     </div>
                   </>
@@ -390,7 +405,7 @@ function ResponsiveLanding({ language = 'en' }: { language?: 'en' | 'ar' }) {
                     </div>
                     <div className="mt-6 flex justify-end">
                       <button type="button" onClick={() => setStage('tracking')} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">
-                        {isArabic ? 'تتبع هذا السيناريو' : 'Track This Scenario'}
+                        {isArabic ? 'عرض متابعة الاستجابة' : 'View response tracking'}
                       </button>
                     </div>
                   </>
@@ -423,7 +438,7 @@ function ResponsiveLanding({ language = 'en' }: { language?: 'en' | 'ar' }) {
                     <p className="mt-5 text-sm leading-7 text-slate-600">{isArabic ? 'وهكذا تتحول بلاغة واحدة إلى استجابة منظمة.' : 'This is how HavenAid turns a report into an organized response.'}</p>
                     <div className="mt-6 flex justify-end">
                       <button type="button" onClick={() => setStage('complete')} className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white">
-                        {isArabic ? 'إكمال العرض' : 'Finish Demo'}
+                        {isArabic ? 'إكمال العرض' : 'Finish the demo'}
                       </button>
                     </div>
                   </>
